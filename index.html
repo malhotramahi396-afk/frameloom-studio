@@ -2,101 +2,171 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Frameloom Mobile Studio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Frameloom Studio Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Frameloom AI Video Studio - 24/7 Remote Laptop Controller">
+  
+  <!-- PWA & Mobile Web App Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0B0E17">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Frameloom">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: radial-gradient(circle at 50% 20%, #161e2e 0%, #0a0d14 100%);
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      background: #0B0E17;
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 1. Fullscreen Seamless Studio Frame */
+    #studioFrame {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      border: none;
+      z-index: 10;
+      display: none;
+      background: #0B0E17;
+    }
+
+    /* 2. Sleek Loading / Reconnecting Overlay */
+    #loaderOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-      text-align: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 25%, #13192B 0%, #07090F 100%);
+      transition: opacity 0.3s ease;
     }
+    #loaderOverlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .card {
-      background: rgba(22, 27, 34, 0.85);
-      border: 1px solid rgba(48, 54, 61, 0.8);
+      background: rgba(18, 24, 38, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
-      padding: 40px 28px;
-      max-width: 390px;
+      padding: 36px 24px;
+      max-width: 360px;
       width: 100%;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(16, 185, 129, 0.1);
-      backdrop-filter: blur(12px);
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(16, 185, 129, 0.08);
+      backdrop-filter: blur(16px);
+      position: relative;
     }
-    .icon-box {
-      width: 68px;
-      height: 68px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(59,130,246,0.1) 100%);
-      border: 1.5px solid rgba(16,185,129,0.4);
+
+    .app-icon-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border: 1.5px solid rgba(16, 185, 129, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
-      margin: 0 auto 20px;
-      box-shadow: 0 0 25px rgba(16,185,129,0.2);
+      font-size: 28px;
+      margin: 0 auto 18px;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
     }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .sub {
+      font-size: 11.5px;
+      color: #10b981;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 3px;
+      margin-bottom: 22px;
+    }
+
     .spinner {
-      width: 38px;
-      height: 38px;
-      border: 3.5px solid rgba(16,185,129,0.15);
+      width: 36px;
+      height: 36px;
+      border: 3.5px solid rgba(16, 185, 129, 0.15);
       border-top-color: #10b981;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 16px auto;
+      animation: spin 0.75s linear infinite;
+      margin: 0 auto 16px;
     }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    h2 {
-      font-size: 21px;
-      color: #fff;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-    .subtitle {
-      font-size: 13px;
-      color: #8b949e;
-      margin-top: 4px;
-      margin-bottom: 20px;
-    }
-    #msg {
-      font-size: 14px;
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    #statusText {
+      font-size: 13.5px;
       color: #94a3b8;
       line-height: 1.5;
-      min-height: 42px;
-      display: flex;
+      min-height: 38px;
+    }
+
+    .action-btn {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-    }
-    .btn {
-      display: inline-block;
+      gap: 8px;
       margin-top: 18px;
-      padding: 12px 28px;
-      border-radius: 999px;
+      padding: 11px 22px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #04241c;
+      color: #fff;
       font-weight: 700;
+      font-size: 13.5px;
       text-decoration: none;
-      font-size: 14.5px;
-      box-shadow: 0 4px 18px rgba(16,185,129,0.4);
-      transition: transform 0.15s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+      width: 100%;
     }
-    .btn:active { transform: scale(0.97); }
-    .badge {
+    .action-btn:active { transform: scale(0.98); }
+
+    .install-pwa-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #cbd5e1;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .badge-status {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 24px;
-      font-size: 11.5px;
+      margin-top: 20px;
+      font-size: 11px;
       color: #64748b;
-      background: rgba(255,255,255,0.04);
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.06);
+      font-family: monospace;
     }
     .badge-dot {
       width: 7px;
@@ -105,49 +175,177 @@
       background: #10b981;
       box-shadow: 0 0 6px #10b981;
     }
+
+    /* 3. Floating Quick Action Bar in Installed PWA */
+    #floatingTools {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    .float-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      font-size: 15px;
+    }
+    .float-btn:active {
+      color: #10b981;
+      border-color: #10b981;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="icon-box">🎬</div>
-    <h2>Frameloom Studio</h2>
-    <div class="subtitle">24/7 Mobile Remote Access</div>
-    
-    <div class="spinner" id="spinner"></div>
-    <div id="msg">Connecting to your Laptop...</div>
-    <div id="btnArea"></div>
 
-    <div class="badge">
-      <span class="badge-dot"></span>
-      <span>Auto-Syncing with Laptop</span>
+  <!-- Fullscreen Embedded Studio -->
+  <iframe id="studioFrame" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+
+  <!-- Loading & Reconnection Screen -->
+  <div id="loaderOverlay">
+    <div class="card">
+      <div class="app-icon-badge">🎬</div>
+      <h1>FRAMELOOM</h1>
+      <div class="sub">STUDIO PRO · MOBILE</div>
+
+      <div class="spinner" id="spinner"></div>
+      <div id="statusText">Connecting to your Laptop...</div>
+
+      <button type="button" id="btnRetry" class="action-btn" style="display:none;" onclick="startConnect(true)">
+        🔄 Reconnect Now
+      </button>
+
+      <button type="button" id="btnInstallPwa" class="install-pwa-btn">
+        📲 Install App to Home Screen
+      </button>
+
+      <div class="badge-status">
+        <span class="badge-dot" id="batDot"></span>
+        <span id="batStatus">Permanent Auto-Sync</span>
+      </div>
     </div>
+  </div>
+
+  <!-- Floating Reconnect Pill for Installed PWA -->
+  <div id="floatingTools">
+    <button type="button" class="float-btn" title="Refresh Studio" onclick="reloadStudio()">🔄</button>
   </div>
 
   <script>
     const BUCKET = "UsKKd7HDHYSXV25st69Z6w";
-    let attempts = 0;
+    const KVDB_URL = "https://kvdb.io/" + BUCKET + "/tunnel_url";
+    let activeTunnelUrl = "";
+    let retryCount = 0;
+    let deferredPrompt = null;
 
-    async function checkTunnel() {
-      try {
-        const res = await fetch("https://kvdb.io/" + BUCKET + "/tunnel_url?t=" + Date.now());
-        if (res.ok) {
-          const url = (await res.text()).trim();
-          if (url && url.startsWith("https://") && url.includes(".trycloudflare.com")) {
-            document.getElementById("spinner").style.display = "none";
-            document.getElementById("msg").innerHTML = "<span style='color:#10b981; font-weight:600;'>Connected! Opening Studio...</span>";
-            document.getElementById("btnArea").innerHTML = `<a href="${url}" class="btn">Click Here to Open</a>`;
-            window.location.replace(url);
-            return;
-          }
-        }
-      } catch (err) {}
-
-      attempts++;
-      document.getElementById("msg").innerHTML = `<span style='color:#f59e0b;'>Laptop connect ho raha hai...<br><small style="color:#64748b;">(Retrying ${attempts})</small></span>`;
-      setTimeout(checkTunnel, 2500);
+    // Register PWA Service Worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      });
     }
 
-    checkTunnel();
+    // Capture PWA install prompt
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById("btnInstallPwa");
+      if (btn) {
+        btn.style.display = "inline-flex";
+        btn.onclick = async () => {
+          btn.style.display = "none";
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+        };
+      }
+    });
+
+    async function fetchLiveTunnelUrl() {
+      const res = await fetch(KVDB_URL + "?t=" + Date.now());
+      if (!res.ok) throw new Error("KVDB unavailable");
+      const url = (await res.text()).trim();
+      if (url && url.startsWith("https://") && url.includes(".trycloudflare.com")) {
+        return url;
+      }
+      throw new Error("Invalid tunnel URL");
+    }
+
+    async function startConnect(manual = false) {
+      const statusText = document.getElementById("statusText");
+      const spinner = document.getElementById("spinner");
+      const btnRetry = document.getElementById("btnRetry");
+      const overlay = document.getElementById("loaderOverlay");
+      const frame = document.getElementById("studioFrame");
+      const floatTools = document.getElementById("floatingTools");
+
+      spinner.style.display = "block";
+      btnRetry.style.display = "none";
+      statusText.innerHTML = manual ? "Searching for active laptop session..." : "Connecting to your Laptop...";
+
+      try {
+        const tunnelUrl = await fetchLiveTunnelUrl();
+        activeTunnelUrl = tunnelUrl;
+
+        statusText.innerHTML = "<span style='color:#10b981;font-weight:700;'>Connected! Launching Studio...</span>";
+
+        frame.src = tunnelUrl;
+        frame.onload = function() {
+          // Studio loaded successfully inside permanent PWA!
+          overlay.classList.add("hidden");
+          frame.style.display = "block";
+          floatTools.style.display = "flex";
+        };
+
+        // Fallback safety timeout: if iframe takes more than 4s, reveal frame anyway
+        setTimeout(() => {
+          overlay.classList.add("hidden");
+          frame.style.display = "block";
+          floatTools.style.display = "flex";
+        }, 3500);
+
+      } catch (err) {
+        retryCount++;
+        spinner.style.display = "none";
+        btnRetry.style.display = "inline-flex";
+        statusText.innerHTML = `<span style='color:#f59e0b;font-weight:600;'>Laptop abhi connect nahi hua hai.<br><small style="color:#64748b;font-size:12px;">Laptop lid khol kar check karein (Retry #${retryCount})</small></span>`;
+        // Auto retry every 4 seconds in background
+        setTimeout(() => startConnect(false), 4000);
+      }
+    }
+
+    function reloadStudio() {
+      const overlay = document.getElementById("loaderOverlay");
+      overlay.classList.remove("hidden");
+      startConnect(true);
+    }
+
+    // Auto-reconnect when app is reopened from background
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        fetchLiveTunnelUrl()
+          .then(newUrl => {
+            if (newUrl && newUrl !== activeTunnelUrl) {
+              reloadStudio();
+            }
+          })
+          .catch(() => {});
+      }
+    });
+
+    // Start connection
+    startConnect();
   </script>
 </body>
 </html>
