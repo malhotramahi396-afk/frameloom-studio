@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Raj VidGen — AI Video Studio (Gold Edition)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Raj VidGen">
+  <meta name="application-name" content="Raj VidGen">
+  <meta name="theme-color" content="#030305">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FFF3A8'/%3E%3Cstop offset='35%25' stop-color='%23FFD700'/%3E%3Cstop offset='70%25' stop-color='%23D4AF37'/%3E%3Cstop offset='100%25' stop-color='%23AA771C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='5' fill='url(%23g)'/%3E%3Cpath d='M4 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2.5l4-2.5v12l-4-2.5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z' fill='%23060608'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FFF3A8'/%3E%3Cstop offset='35%25' stop-color='%23FFD700'/%3E%3Cstop offset='70%25' stop-color='%23D4AF37'/%3E%3Cstop offset='100%25' stop-color='%23AA771C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='5' fill='url(%23g)'/%3E%3Cpath d='M4 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2.5l4-2.5v12l-4-2.5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z' fill='%23060608'/%3E%3C/svg%3E">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 20%, #1c180e 0%, #060608 100%);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      background: rgba(15, 15, 24, 0.92);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      border-radius: 24px;
+      padding: 40px 28px;
+      max-width: 390px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.2);
+      backdrop-filter: blur(14px);
+    }
+    .icon-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #FFF3A8 0%, #FFD700 35%, #D4AF37 70%, #AA771C 100%);
+      border: 1.5px solid #FFF8C5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.45);
+    }
+    .icon-box svg {
+      width: 40px;
+      height: 40px;
+      fill: #060608;
+    }
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border: 3.5px solid rgba(212, 175, 55, 0.2);
+      border-top-color: #FFD700;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 16px auto;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    h2 {
+      font-size: 24px;
+      background: linear-gradient(135deg, #FFF6BD 0%, #FFD700 35%, #D4AF37 70%, #AA771C 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 850;
+      letter-spacing: 0.03em;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #D4AF37;
+      font-weight: 750;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+    #msg {
+      font-size: 14px;
+      color: #EAE3D2;
+      line-height: 1.5;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 12px 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #FFF3A8 0%, #FFD700 35%, #D4AF37 70%, #996515 100%);
+      color: #060608;
+      font-weight: 850;
+      text-decoration: none;
+      font-size: 14.5px;
+      box-shadow: 0 4px 18px rgba(212, 175, 55, 0.5), inset 0 1px 0 #fff;
+      transition: transform 0.15s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 24px;
+      font-size: 11px;
+      color: #D5CCA8;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+    }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FFD700;
+      box-shadow: 0 0 6px #FFD700;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon-box">
+      <svg viewBox="0 0 24 24"><path d="M4 4h10a2 2 0 0 1 2 2v2.5l4-2.5v12l-4-2.5V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+    </div>
+    <h2>Raj VidGen</h2>
+    <div class="subtitle">AI Video Studio · Gold Mobile Edition</div>
+    
+    <div class="spinner" id="spinner"></div>
+    <div id="msg">Connecting to your Laptop...</div>
+    <div id="btnArea"></div>
+
+    <div class="badge">
+      <span class="badge-dot"></span>
+      <span>Auto-Syncing with Laptop</span>
+    </div>
+  </div>
+
+  <script>
+    const BUCKET = "UsKKd7HDHYSXV25st69Z6w";
+    let attempts = 0;
+
+    async function checkTunnel() {
+      try {
+        const res = await fetch("https://kvdb.io/" + BUCKET + "/tunnel_url?t=" + Date.now());
+        if (res.ok) {
+          const url = (await res.text()).trim();
+          if (url && url.startsWith("https://") && url.includes(".trycloudflare.com")) {
+            document.getElementById("spinner").style.display = "none";
+            document.getElementById("msg").innerHTML = "<span style='color:#FFD700; font-weight:700;'>Connected! Opening Raj VidGen...</span>";
+            document.getElementById("btnArea").innerHTML = `<a href="${url}" class="btn">Click Here to Open</a>`;
+            window.location.replace(url);
+            return;
+          }
+        }
+      } catch (err) {}
+
+      attempts++;
+      document.getElementById("msg").innerHTML = `<span style='color:#FFD700;'>Laptop connect ho raha hai...<br><small style="color:#C5BCA8;">(Retrying ${attempts})</small></span>`;
+      setTimeout(checkTunnel, 2500);
+    }
+
+    checkTunnel();
+  </script>
+</body>
+</html>
